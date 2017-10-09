@@ -3,14 +3,17 @@ var express     = require("express"),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose");
 
-mongoose.connect("mongodb://localhost/yelp_camp")
+mongoose.Promise = global.Promise;    
+// mongoose.connect("mongodb://localhost/yelp_camp");
+mongoose.connect("mongodb://localhost/yelp_camp", {useMongoClient: true});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 var campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 
 var Campground = mongoose.model("Campground", campgroundSchema);
@@ -18,7 +21,8 @@ var Campground = mongoose.model("Campground", campgroundSchema);
 // Campground.create(
 //     {
 //         name: "Salmon Creek",
-//         image: "https://farm4.staticflickr.com/3872/14435096036_39db8f04bc.jpg"
+//         image: "https://farm4.staticflickr.com/3872/14435096036_39db8f04bc.jpg",
+//         description: "This is a huge granie hill.."
 //     }, function(err, campground){
 //         if(err){
 //             console.log(err);
@@ -53,7 +57,7 @@ app.get("/campgrounds", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("campgrounds", {campgrounds, campgrounds});
+            res.render("index", {campgrounds, campgrounds});
         }
     });
 
@@ -63,7 +67,8 @@ app.post("/campgrounds", function(req, res){
     // res.send("You hit the post route!");
     var name = req.body.name;
     var image = req.body.image;
-    var newCampground = {name: name, image: image};
+    var desc = req.body.description;    
+    var newCampground = {name: name, image: image, description: desc};
     // campgrounds.push(newCampground);
 
     Campground.create(newCampground, function(err, newlyAdded){
@@ -78,7 +83,17 @@ app.post("/campgrounds", function(req, res){
 });
 
 app.get("/campgrounds/new", function(req, res){
-    res.render("new.ejs");
+    res.render("new");
+});
+
+app.get("/campgrounds/:id", function(req, res){
+    Campground.findById(req.params.id, function(err, foundCampground){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("show", {campground: foundCampground});                
+        }
+    });
 });
 
 app.listen(3000, "localhost", function(){
