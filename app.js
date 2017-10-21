@@ -21,6 +21,18 @@ app.use(express.static(__dirname + "/public"));
 
 seedDB();
 
+app.use(require("express-session")({
+    secret: "This is a story about a ship called Titanic",
+    resave: false,
+    saveUninitialized: false
+
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // var campgroundSchema = new mongoose.Schema({
 //     name: String,
@@ -135,6 +147,23 @@ app.post("/campgrounds/:id/comments", function(req, res){
                 }
             });
         }
+    });
+});
+
+app.get("/register", function(req, res){
+    res.render("register");
+});
+
+app.post("/register", function(req, res){
+    var newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, User){
+        if(err){
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/campgrounds")
+        });
     });
 });
 
