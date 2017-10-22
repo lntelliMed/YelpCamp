@@ -22,7 +22,7 @@ app.set("view engine", "ejs");
 
 app.use(express.static(__dirname + "/public"));
 
-seedDB();
+//seedDB();
 
 app.use(require("express-session")({
     secret: "This is a story about a ship called Titanic",
