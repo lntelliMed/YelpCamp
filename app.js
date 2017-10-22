@@ -34,6 +34,12 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// use following instead of adding {currentUser: req.user} to every route manually
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+});
+
 // var campgroundSchema = new mongoose.Schema({
 //     name: String,
 //     image: String,
@@ -81,7 +87,8 @@ app.get("/campgrounds", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("campgrounds/index", {campgrounds, campgrounds});
+            // res.render("campgrounds/index", {campgrounds: campgrounds, currentUser: req.user});
+            res.render("campgrounds/index", {campgrounds: campgrounds});            
         }
     });
 
