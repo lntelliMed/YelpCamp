@@ -43,6 +43,8 @@ passport.deserializeUser(User.deserializeUser());
 // use following instead of adding {currentUser: req.user} to every route manually
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");    
     next();
 });
 
