@@ -99,9 +99,6 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 // ];
 
 
-var portNumber = Number(process.env.PORT) || 3000;
-var ipAddress = process.env.IP || "localhost";
-
 // app.listen(3000, "localhost", function(){
 //     console.log("YelpCamp Server Has Started!");
 // });
@@ -110,6 +107,10 @@ var ipAddress = process.env.IP || "localhost";
 //     console.log("YelpCamp Server Has Started!");
 // });
 
-app.listen(portNumber, ipAddress, function(){
+console.log(process.env.PORT);
+console.log(process.env.IP);
+console.log(process.env.DATABASEURL);
+
+app.listen(process.env.PORT || 3000, process.env.IP || "localhost", function(){
     console.log("YelpCamp Server Has Started!");
 });
