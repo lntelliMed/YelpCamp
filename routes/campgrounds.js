@@ -55,8 +55,8 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     var author = {
         id: req.user._id,
         username: req.user.username
-    }
-    geocoder.geocode(req.body.location, function (err, data) {
+    };
+    geocoder.geocode(req.body.location || "USA", function (err, data) {
       var lat = data.results[0].geometry.location.lat;
       var lng = data.results[0].geometry.location.lng;
       var location = data.results[0].formatted_address;
@@ -116,7 +116,7 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
 // });
 
 router.put("/:id", function(req, res){
-    geocoder.geocode(req.body.campground.location, function (err, data) {
+    geocoder.geocode(req.body.campground.location || "USA", function (err, data) {
       var lat = data.results[0].geometry.location.lat;
       var lng = data.results[0].geometry.location.lng;
       var location = data.results[0].formatted_address;
