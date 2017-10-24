@@ -14,7 +14,7 @@ router.get("/", function(req, res){
             console.log(err);
         } else {
             // res.render("campgrounds/index", {campgrounds: campgrounds, currentUser: req.user});
-            res.render("campgrounds/index", {campgrounds: campgrounds});            
+            res.render("campgrounds/index", {campgrounds: campgrounds, page: 'campgrounds'});            
         }
     });
 
