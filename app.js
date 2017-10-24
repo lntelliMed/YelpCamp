@@ -99,7 +99,7 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 // ];
 
 
-var portNumber = process.env.PORT || 3000;
+var portNumber = Number(process.env.PORT) || 3000;
 var ipAddress = process.env.IP || "localhost";
 
 // app.listen(3000, "localhost", function(){
