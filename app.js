@@ -107,10 +107,14 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 //     console.log("YelpCamp Server Has Started!");
 // });
 
-console.log(process.env.PORT);
-console.log(process.env.IP);
-console.log(process.env.DATABASEURL);
+// console.log(process.env.PORT);
+// console.log(process.env.IP);
+// console.log(process.env.DATABASEURL);
 
 app.listen(process.env.PORT || 3000, process.env.IP || "localhost", function(){
+    console.log("YelpCamp Server Has Started!");
+});
+
+app.listen(process.env.PORT || 3000, process.env.IP, function(){
     console.log("YelpCamp Server Has Started!");
 });
