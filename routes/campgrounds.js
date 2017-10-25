@@ -8,16 +8,36 @@ var middleware = require("../middleware");
 var geocoder = require('geocoder');
 
 // router.get("/campgrounds", function(req, res){
-router.get("/", function(req, res){        
-    // res.render("campgrounds", {campgrounds, campgrounds});
-    Campground.find({}, function(err, campgrounds){
-        if(err){
-            console.log(err);
-        } else {
-            // res.render("campgrounds/index", {campgrounds: campgrounds, currentUser: req.user});
-            res.render("campgrounds/index", {campgrounds: campgrounds, page: 'campgrounds'});            
-        }
-    });
+router.get("/", function(req, res){ 
+    var noMatch = null;
+    
+    // eval(require("locus"));
+
+    if(req.query.search){
+        const regex = new RegExp(escapeRegex(req.query.search), "gi");
+        Campground.find({name: regex}, function(err, campgrounds){
+            if(err){
+                console.log(err);
+            } else {
+                if(campgrounds.length < 1){
+                    noMatch = "No campgrounds matching your query have been found, please try again..";
+                }
+                res.render("campgrounds/index", {campgrounds: campgrounds, page: 'campgrounds', noMatch: noMatch});            
+            }
+        });
+    } else {
+        // res.render("campgrounds", {campgrounds, campgrounds});
+        Campground.find({}, function(err, campgrounds){
+            if(err){
+                console.log(err);
+            } else {
+                // res.render("campgrounds/index", {campgrounds: campgrounds, currentUser: req.user});
+                res.render("campgrounds/index", {campgrounds: campgrounds, page: 'campgrounds', noMatch: noMatch});            
+            }
+        });
+    }
+
+
 
 });
 
@@ -169,5 +189,9 @@ router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
 //         res.redirect("back");
 //     }
 // }
+
+function escapeRegex(text){
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;
